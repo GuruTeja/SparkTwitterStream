@@ -26,9 +26,16 @@ object StreamTweets {
     val sparkConf = new SparkConf().setAppName("twitterspark_guru").setMaster("local[*]")
     //creating streaming context with 2 second window
     val ssc = new StreamingContext(sparkConf, Seconds(2))
+    //Using the streaming context, open a twitter stream (By the way you can also use filters)
+    //Stream generates a series of random tweets
+    val stream = TwitterUtils.createStream(ssc, None, filters)
+    stream.print()
+    //Map :Retrieving Hash Tag
+    val hashTags = stream.flatMap(status => status.getText.split("").filter(_.startsWith("#")))
+    hashTags.print()
 
-
-
+    //Finding the hashtags on 30 sec window
+    val tophash = hashTags.map((_, 1)).reduceByKeyAndWindow(_ + _, Seconds(30))
   }
 
 }

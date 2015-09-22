@@ -1,8 +1,5 @@
-import _root_.sbtassembly.AssemblyPlugin.autoImport._
-import _root_.sbtassembly.PathList
-import sbt.Keys._
 
-import scala.util.matching.Regex
+import sbt.Keys._
 
 lazy val root = (project in file(".")).
   settings(
@@ -10,21 +7,11 @@ lazy val root = (project in file(".")).
     version := "1.0",
     scalaVersion := "2.11.7",
     mainClass in Compile := Some("StreamTweets")
-)
+  )
 
 exportJars := true
 fork := true
 
-assemblyJarName := "SparkTwitteStream.jar"
-
-assemblyMergeStrategy in assembly := {
-  case PathList("javax", "servlet", xs@_*) => MergeStrategy.first
-  case PathList(ps@_*) if ps.last endsWith ".html" => MergeStrategy.first
-  case n if n.startsWith("reference.conf") => MergeStrategy.concat
-  case n if n.endsWith(".conf") => MergeStrategy.concat
-  case meta(_) => MergeStrategy.discard
-  case x => MergeStrategy.first
-}
 
 // additional libraries
 libraryDependencies ++= Seq(
@@ -59,3 +46,4 @@ resolvers ++= Seq(
   "Mesosphere Public Repository" at "http://downloads.mesosphere.io/maven",
   Resolver.sonatypeRepo("public")
 )
+
